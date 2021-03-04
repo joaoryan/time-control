@@ -1,0 +1,136 @@
+#include <LiquidCrystal.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+  int min=0;
+  int sec=0; 
+  #define BT 7 
+  #define tempoReset 	1500
+  #define led1 6
+  #define led2 8
+  #define led3 9
+  #define buzzer 10
+ 
+
+  LiquidCrystal lcd(12, 11, 5, 4, 3, 2); 
+ 
+void setup() {
+  lcd.begin(16, 2); //Inicializa o Display LCD 16x2
+	pinMode(led2, OUTPUT);
+	pinMode(led1, OUTPUT);
+    pinMode(led1, OUTPUT);
+	pinMode(BT, INPUT);
+	pinMode(1, OUTPUT);
+    Serial.begin(9600);
+}
+void serial(int m ,int s)
+{
+  Serial.println("ALARME DE TRES ESTAGIOS");
+  Serial.println("Desenvolvedor :");
+  Serial.println("Alexandre lopes de souza filho");
+  Serial.println("TEMPO DE BANHO");
+  Serial.println("minutos :");
+  Serial.println(min);
+  Serial.println("segundos :");
+  Serial.println(sec);
+  if (m == 0 )
+  {
+     Serial.println("Led verde : desligado ");
+     Serial.println("Led amarelo : desligado");
+     Serial.println("Led vermelho : desligado");
+  }
+ else if(m >= 1&& m < 2)
+  {
+     Serial.println("Led verde : ligado");
+     Serial.println("Led amarelo : desligado");
+     Serial.println("Led vermelho : desligado");
+  }
+  else if (m >= 2&& m < 3)
+  {
+     Serial.println("Led verde : ligado");
+     Serial.println("Led amarelo : ligado");
+     Serial.println("Led vermelho : desligado");
+  }
+  else if (m >= 3 )
+  {
+     Serial.println("Led verde : ligado");
+     Serial.println("Led amarelo : ligado");
+     Serial.println("Led vermelho : ligado");
+      Serial.println("BANHO TREMINADO !!!");
+  }
+  delay(1000);
+  
+}
+void loop()  {
+  
+  noTone(buzzer); 
+  digitalWrite(6, LOW);
+  digitalWrite(8, LOW);
+  digitalWrite(9, LOW);
+  
+  
+     if(digitalRead(BT) == 1){
+   	    lcd.begin(16, 2);
+    	lcd.clear();
+        lcd.setCursor(1, 0); 
+        lcd.print("TEMPO DE BANHO"); 
+        lcd.setCursor(6, 1);
+        lcd.print(min); 
+        lcd.print(":");
+        lcd.print(sec);
+       
+        		if(sec==59){
+                    
+                    min++;
+                    sec=-1;
+                }
+
+                if(min==59){
+                    min=0;
+                }
+    serial(min,sec);
+    delay(100);
+    sec++;
+   
+    if (min==1&&sec==0)
+  {
+     
+    digitalWrite(6, HIGH);
+    tone(buzzer,1500);   
+    delay(500);
+    noTone(buzzer);
+        
+  }
+  if (min==2&&sec==0)
+  {  
+   digitalWrite(8, HIGH); 
+    tone(buzzer,1500);   
+    delay(500);
+    noTone(buzzer);  
+  }
+  if (min==3 && digitalRead(BT)== 1  )
+  {
+   digitalWrite(9, HIGH);
+   tone(buzzer,1500);
+   delay(200);
+  }
+     
+  }     
+
+else if (digitalRead(BT)==0 )
+{
+     lcd.setCursor(1, 0); 
+     lcd.print("TEMPO DE BANHO");
+     lcd.setCursor(6,1);
+     lcd.print("0:0");
+     sec=0;
+     min=0;
+     serial(min,sec);
+  noTone(buzzer); 
+  digitalWrite(6, LOW);
+  digitalWrite(8, LOW);
+  digitalWrite(9, LOW);
+  
+}
+ 
+}
