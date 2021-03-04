@@ -1,4 +1,4 @@
-# time-control
+# Time Control
 Controlador de tempo
 Apresentado na diciplina introdução de engenharia-C201
 
